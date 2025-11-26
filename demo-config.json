@@ -1,39 +1,39 @@
 {
   "public": {
     "default": {
-      "commerce-core-endpoint": "https://www.aemshop.net/graphql",
-      "commerce-endpoint": "https://www.aemshop.net/cs-graphql",
+      "commerce-core-endpoint": "https://integration-5ojmyuq-5spgfttbivghc.us-a1.magentosite.cloud/graphql",
+      "commerce-endpoint": "https://catalog-service-sandbox.adobe.io/graphql",
       "commerce-assets-enabled": false,
       "headers": {
         "all": {
-          "Store": "default"
+          "Store": "en_us"
         },
         "cs": {
-          "Magento-Store-Code": "main_website_store",
-          "Magento-Store-View-Code": "default",
-          "Magento-Website-Code": "base",
-          "x-api-key": "4dfa19c9fe6f4cccade55cc5b3da94f7",
-          "Magento-Environment-Id": "f38a0de0-764b-41fa-bd2c-5bc2f3c7b39a"
+          "Magento-Store-Code": "US",
+          "Magento-Store-View-Code": "en_us",
+          "Magento-Website-Code": "usa",
+          "x-api-key": "236cdf35cc6849c182856986ab403085",
+          "Magento-Environment-Id": "456d1e25-5454-49e8-88b0-6c771fb48650"
         }
       },
       "analytics": {
         "base-currency-code": "USD",
         "environment": "Testing",
-        "environment-id": "f38a0de0-764b-41fa-bd2c-5bc2f3c7b39a",
-        "store-code": "main_website_store",
-        "store-id": 1,
+        "environment-id": "456d1e25-5454-49e8-88b0-6c771fb48650",
+        "store-code": "US",
+        "store-id": 29,
         "store-name": "Main Website Store",
-        "store-url": "https://www.aemshop.net",
-        "store-view-code": "default",
-        "store-view-id": 1,
+        "store-url": "https://integration-5ojmyuq-5spgfttbivghc.us-a1.magentosite.cloud",
+        "store-view-code": "en_us",
+        "store-view-id": 31,
         "store-view-name": "Default Store View",
-        "website-code": "base",
-        "website-id": 1,
+        "website-code": "usa",
+        "website-id": 30,
         "website-name": "Main Website"
       },
       "plugins": {
         "picker": {
-           "rootCategory": "YOUR_ROOT_CATEGORY_ID"
+           "rootCategory": "3"
          }
       }
     }
