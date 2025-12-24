@@ -22,6 +22,10 @@ import {
 import { PaymentMethodCode } from '@dropins/storefront-payment-services/api.js';
 import { getUserTokenCookie } from '../../scripts/initializers/index.js';
 
+// 1. Import Braintree Payment Gateway
+// eslint-disable-next-line import/no-unresolved
+import 'https://js.braintreegateway.com/web/dropin/1.43.0/js/dropin.min.js';
+
 // Block Utilities
 import {
   displayOverlaySpinner,
@@ -90,6 +94,7 @@ import {
 import '../../scripts/initializers/account.js';
 import '../../scripts/initializers/checkout.js';
 import '../../scripts/initializers/order.js';
+import './braintree.js';
 
 export default async function decorate(block) {
   // Container and component references
@@ -98,6 +103,8 @@ export default async function decorate(block) {
   let billingForm;
   let shippingAddresses;
   let billingAddresses;
+  // 2. Create variable to store the Braintree dropin instance
+  let braintreeInstance;
 
   const shippingFormRef = { current: null };
   const billingFormRef = { current: null };
@@ -247,7 +254,75 @@ export default async function decorate(block) {
     renderTermsAndConditions($termsAndConditions),
 
     renderGiftOptions($giftOptions),
-  ]);
+
+    // 3. Add Braintree Handler to Payment Methods Container
+    CheckoutProvider.render(PaymentMethods, {
+      slots: {
+        Methods: {
+          braintree: {
+            autoSync: false,
+            render: async (ctx) => {
+              const container = document.createElement('div');
+
+              window.braintree.dropin.create({
+                authorization: 'sandbox_cstz6tw9_sbj9bzvx2ngq77n4',
+                container,
+              }, (err, dropinInstance) => {
+                if (err) {
+                  console.error(err);
+                }
+
+                braintreeInstance = dropinInstance;
+              });
+
+              ctx.replaceHTML(container);
+            },
+          },
+        },
+      },
+    })($paymentMethods),
+
+    CheckoutProvider.render(PlaceOrder, {
+      handlePlaceOrder: async ({ cartId, code }) => {
+        await displayOverlaySpinner();
+        try {
+          switch (code) {
+            case 'braintree': {
+              braintreeInstance.requestPaymentMethod(async (err, payload) => {
+                if (err) {
+                  removeOverlaySpinner();
+                  console.error(err);
+                  return;
+                }
+
+                await checkoutApi.setPaymentMethod({
+                  code: 'braintree',
+                  braintree: {
+                    is_active_payment_token_enabler: false,
+                    payment_method_nonce: payload.nonce,
+                  },
+                });
+
+                await orderApi.placeOrder(cartId);
+              });
+
+              break;
+            }
+
+            default: {
+              // Place order
+              await orderApi.placeOrder(cartId);
+            }
+          }
+        } catch (error) {
+          console.error(error);
+          throw error;
+        } finally {
+          await removeOverlaySpinner();
+        }
+      },
+    })($placeOrder),
+      ]);
 
   async function displayEmptyCart() {
     if (emptyCart) return;
