@@ -104,8 +104,6 @@ export default async function decorate(block) {
   let billingForm;
   let shippingAddresses;
   let billingAddresses;
-  // 2. Create variable to store the Braintree dropin instance
-  let braintreeInstance;
 
   const shippingFormRef = { current: null };
   const billingFormRef = { current: null };

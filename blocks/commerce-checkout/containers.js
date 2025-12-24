@@ -56,8 +56,9 @@ import { render as OrderProvider } from '@dropins/storefront-order/render.js';
 
 // Tools
 import {
-  Button,
+   Button,
   Header,
+  ProgressSpinner,
   provider as UI,
 } from '@dropins/tools/components.js';
 import { events } from '@dropins/tools/event-bus.js';
@@ -95,6 +96,7 @@ import {
   SHIPPING_FORM_NAME,
   USER_TOKEN_COOKIE_NAME,
 } from './constants.js';
+
 
 /**
  * Container IDs for registry management
@@ -1009,6 +1011,8 @@ export const renderOrderConfirmationFooterButton = async (container) => renderCo
     href: rootLink('/'),
   })(container),
 );
+
+  let loader;
 
 async function displayOverlaySpinner() {
     if (loader) return;
