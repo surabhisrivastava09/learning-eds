@@ -418,6 +418,25 @@ export const renderPaymentMethods = async (container, creditCardFormRef) => rend
           [PaymentMethodCode.FASTLANE]: {
             enabled: false,
           },
+          braintree: {
+            autoSync: false,
+            render: async (ctx) => {
+              const container = document.createElement('div');
+
+              window.braintree.dropin.create({
+                authorization: 'sandbox_cstz6tw9_sbj9bzvx2ngq77n4',
+                container,
+              }, (err, dropinInstance) => {
+                if (err) {
+                  console.error(err);
+                }
+
+                braintreeInstance = dropinInstance;
+              });
+
+              ctx.replaceHTML(container);
+            },
+          },
         },
       },
     })(container);
@@ -989,4 +1008,48 @@ export const renderOrderConfirmationFooterButton = async (container) => renderCo
     type: 'submit',
     href: rootLink('/'),
   })(container),
+);
+
+export const updateHandlePlaceOrder = async (container) => renderContainer(
+  CONTAINERS.PLACE_ORDER_BUTTON,
+  async () => CheckoutProvider.render(PlaceOrder, {
+      handlePlaceOrder: async ({ cartId, code }) => {
+        await displayOverlaySpinner();
+        try {
+          switch (code) {
+            case 'braintree': {
+              braintreeInstance.requestPaymentMethod(async (err, payload) => {
+                if (err) {
+                  removeOverlaySpinner();
+                  console.error(err);
+                  return;
+                }
+
+                await checkoutApi.setPaymentMethod({
+                  code: 'braintree',
+                  braintree: {
+                    is_active_payment_token_enabler: false,
+                    payment_method_nonce: payload.nonce,
+                  },
+                });
+
+                await orderApi.placeOrder(cartId);
+              });
+
+              break;
+            }
+
+            default: {
+              // Place order
+              await orderApi.placeOrder(cartId);
+            }
+          }
+        } catch (error) {
+          console.error(error);
+          throw error;
+        } finally {
+          await removeOverlaySpinner();
+        }
+      }
+    })(container),
 );
