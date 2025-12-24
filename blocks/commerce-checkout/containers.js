@@ -64,6 +64,7 @@ import { events } from '@dropins/tools/event-bus.js';
 import { debounce, getCookie } from '@dropins/tools/lib.js';
 import { tryRenderAemAssetsImage } from '@dropins/tools/lib/aem/assets.js';
 import { getConfigValue } from '@dropins/tools/lib/aem/configs.js';
+import * as orderApi from '@dropins/storefront-order/api.js';
 
 // Checkout Dropin Libs
 import {
@@ -147,7 +148,7 @@ export const CONTAINERS = Object.freeze({
  * (e.g., { setProps: (props) => {...}, remove: () => {...} })
  */
 const registry = new Map();
-
+let braintreeInstance;
 /**
  * Checks if a container with the given ID has been rendered.
  * This is used to prevent multiple instances of the same container from being rendered.
@@ -385,7 +386,6 @@ export const renderPaymentMethods = async (container, creditCardFormRef) => rend
     // Retrieve constants internally to minimize parameters
     const commerceCoreEndpoint = getConfigValue('commerce-core-endpoint') || getConfigValue('commerce-endpoint');
     const getUserTokenCookie = () => getCookie(USER_TOKEN_COOKIE_NAME);
-
     return CheckoutProvider.render(PaymentMethods, {
       slots: {
         Methods: {
@@ -1010,12 +1010,31 @@ export const renderOrderConfirmationFooterButton = async (container) => renderCo
   })(container),
 );
 
+async function displayOverlaySpinner() {
+    if (loader) return;
+
+    loader = await UI.render(ProgressSpinner, {
+      className: '.checkout__overlay-spinner',
+    })($loader);
+  };
+
+function removeOverlaySpinner() {
+    if (!loader) return;
+
+    loader.remove();
+    loader = null;
+    $loader.innerHTML = '';
+  }
+
+
+
 export const updateHandlePlaceOrder = async (container) => renderContainer(
   CONTAINERS.PLACE_ORDER_BUTTON,
   async () => CheckoutProvider.render(PlaceOrder, {
       handlePlaceOrder: async ({ cartId, code }) => {
         await displayOverlaySpinner();
         try {
+          
           switch (code) {
             case 'braintree': {
               braintreeInstance.requestPaymentMethod(async (err, payload) => {
@@ -1032,7 +1051,6 @@ export const updateHandlePlaceOrder = async (container) => renderContainer(
                     payment_method_nonce: payload.nonce,
                   },
                 });
-
                 await orderApi.placeOrder(cartId);
               });
 
