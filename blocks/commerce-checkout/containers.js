@@ -1012,23 +1012,23 @@ export const renderOrderConfirmationFooterButton = async (container) => renderCo
   })(container),
 );
 
-  let loader;
+  //let loader;
 
-async function displayOverlaySpinner() {
-    if (loader) return;
+// async function displayOverlaySpinner() {
+//     if (loader) return;
 
-    loader = await UI.render(ProgressSpinner, {
-      className: '.checkout__overlay-spinner',
-    })($loader);
-  };
+//     loader = await UI.render(ProgressSpinner, {
+//       className: '.checkout__overlay-spinner',
+//     })($loader);
+//   };
 
-function removeOverlaySpinner() {
-    if (!loader) return;
+// function removeOverlaySpinner() {
+//     if (!loader) return;
 
-    loader.remove();
-    loader = null;
-    $loader.innerHTML = '';
-  }
+//     loader.remove();
+//     loader = null;
+//     $loader.innerHTML = '';
+//   }
 
 
 
@@ -1036,14 +1036,14 @@ export const updateHandlePlaceOrder = async (container) => renderContainer(
   CONTAINERS.PLACE_ORDER_BUTTON,
   async () => CheckoutProvider.render(PlaceOrder, {
       handlePlaceOrder: async ({ cartId, code }) => {
-        await displayOverlaySpinner();
+       // await displayOverlaySpinner();
         try {
           
           switch (code) {
             case 'braintree': {
               braintreeInstance.requestPaymentMethod(async (err, payload) => {
                 if (err) {
-                  removeOverlaySpinner();
+                 // removeOverlaySpinner();
                   console.error(err);
                   return;
                 }
@@ -1070,7 +1070,7 @@ export const updateHandlePlaceOrder = async (container) => renderContainer(
           console.error(error);
           throw error;
         } finally {
-          await removeOverlaySpinner();
+          //await removeOverlaySpinner();
         }
       }
     })(container),
