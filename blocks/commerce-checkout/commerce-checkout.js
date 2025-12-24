@@ -95,7 +95,6 @@ import {
 import '../../scripts/initializers/account.js';
 import '../../scripts/initializers/checkout.js';
 import '../../scripts/initializers/order.js';
-import './braintree.js';
 
 export default async function decorate(block) {
   // Container and component references
