@@ -596,7 +596,7 @@ function getSkuFromUrl() {
 }
 
 export function getProductLink(urlKey, sku) {
-  return rootLink(`/products/${urlKey}/${sku}`);
+  return rootLink(`/products/printer/${urlKey}/${sku}`);
 }
 
 /**
