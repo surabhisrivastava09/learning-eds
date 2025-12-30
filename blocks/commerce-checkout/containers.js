@@ -426,7 +426,7 @@ export const renderPaymentMethods = async (container, creditCardFormRef) => rend
               const container = document.createElement('div');
 
               window.braintree.dropin.create({
-                authorization: 'sandbox_cstz6tw9_sbj9bzvx2ngq77n4',
+                authorization: 'sandbox_msdz4yjz_tncvcfr33pg24w45',
                 container,
               }, (err, dropinInstance) => {
                 if (err) {
