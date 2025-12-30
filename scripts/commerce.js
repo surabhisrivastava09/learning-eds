@@ -591,7 +591,7 @@ export async function commerceEndpointWithQueryParams() {
  */
 function getSkuFromUrl() {
   const path = window.location.pathname;
-  const result = path.match(/\/products\/\/printers\/[\w|-]+\/([\w|-]+)$/);
+  const result = path.match(/\/products\/printers\/[\w|-]+\/([\w|-]+)$/);
   console.log(result);
   return result?.[1];
 }
