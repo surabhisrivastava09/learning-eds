@@ -591,12 +591,13 @@ export async function commerceEndpointWithQueryParams() {
  */
 function getSkuFromUrl() {
   const path = window.location.pathname;
-  const result = path.match(/\/products\/[\w|-]+\/([\w|-]+)$/);
+  const result = path.match(/\/products\/\/printers\/[\w|-]+\/([\w|-]+)$/);
+  console.log(result);
   return result?.[1];
 }
 
 export function getProductLink(urlKey, sku) {
-  return rootLink(`/products/printer/${urlKey}/${sku}`);
+  return rootLink(`/products/printers/${urlKey}/${sku}`);
 }
 
 /**
