@@ -199,8 +199,10 @@ function toCamelCase(name) {
  */
 // eslint-disable-next-line import/prefer-default-export
 function readBlockConfig(block) {
+  console.log(block,'blockblock');
   const config = {};
   block.querySelectorAll(':scope > div').forEach((row) => {
+    console.log(row,'---row---');
     if (row.children) {
       const cols = [...row.children];
       if (cols[1]) {
