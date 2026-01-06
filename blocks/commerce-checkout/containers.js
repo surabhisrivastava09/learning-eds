@@ -150,7 +150,7 @@ export const CONTAINERS = Object.freeze({
  * (e.g., { setProps: (props) => {...}, remove: () => {...} })
  */
 const registry = new Map();
-let braintreeInstance;
+// let braintreeInstance;
 /**
  * Checks if a container with the given ID has been rendered.
  * This is used to prevent multiple instances of the same container from being rendered.
@@ -1038,7 +1038,7 @@ export const updateHandlePlaceOrder = async (container) => renderContainer(
       handlePlaceOrder: async ({ cartId, code }) => {
        // await displayOverlaySpinner();
         try {
-          
+            console.log(code,'-----paymentmethodcode-----');
           switch (code) {
             case 'braintree': {
               braintreeInstance.requestPaymentMethod(async (err, payload) => {
