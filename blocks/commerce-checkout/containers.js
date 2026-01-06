@@ -75,13 +75,14 @@ import {
   transformCartAddressToFormValues,
 } from '@dropins/storefront-checkout/lib/utils.js';
 
-import { showModal, swatchImageSlot } from './utils.js';
+import { showModal, swatchImageSlot , displayOverlaySpinner, removeOverlaySpinner} from './utils.js';
 
 // External dependencies
 import {
   authPrivacyPolicyConsentSlot,
   rootLink,
 } from '../../scripts/commerce.js';
+
 
 // Constants
 import {
@@ -1036,14 +1037,14 @@ export const updateHandlePlaceOrder = async (container) => renderContainer(
   CONTAINERS.PLACE_ORDER_BUTTON,
   async () => CheckoutProvider.render(PlaceOrder, {
       handlePlaceOrder: async ({ cartId, code }) => {
-       // await displayOverlaySpinner();
+        await displayOverlaySpinner();
         try {
             console.log(code,'-----paymentmethodcode-----');
           switch (code) {
             case 'braintree': {
               braintreeInstance.requestPaymentMethod(async (err, payload) => {
                 if (err) {
-                 // removeOverlaySpinner();
+                  removeOverlaySpinner();
                   console.error(err);
                   return;
                 }
@@ -1070,7 +1071,7 @@ export const updateHandlePlaceOrder = async (container) => renderContainer(
           console.error(error);
           throw error;
         } finally {
-          //await removeOverlaySpinner();
+          await removeOverlaySpinner();
         }
       }
     })(container),

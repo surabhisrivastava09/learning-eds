@@ -7,7 +7,6 @@ import { initReCaptcha } from '@dropins/tools/recaptcha.js';
 
 // Order Dropin Modules
 import * as orderApi from '@dropins/storefront-order/api.js';
-import * as checkoutApi from '@dropins/storefront-checkout/api.js';
 
 // Checkout Dropin Libraries
 import {
@@ -120,7 +119,7 @@ export default async function decorate(block) {
 
   // Create the checkout layout using fragments
   const checkoutFragment = createCheckoutFragment();
-let braintreeInstance;
+
   // Create scoped selector for the checkout fragment
   const getElement = createScopedSelector(checkoutFragment);
 
@@ -183,50 +182,21 @@ let braintreeInstance;
   const handlePlaceOrder = async ({ cartId, code }) => {
     await displayOverlaySpinner(loaderRef, $loader);
     try {
-      console.log(code,'---handlePlaceorderfnction---');
-      switch (code) {
-        case 'braintree': {
-          braintreeInstance.requestPaymentMethod(async (err, payload) => {
-            if (err) {
-              // removeOverlaySpinner();
-              console.error(err);
-              return;
-            }
-
-            await checkoutApi.setPaymentMethod({
-              code: 'braintree',
-              braintree: {
-                is_active_payment_token_enabler: false,
-                payment_method_nonce: payload.nonce,
-              },
-            });
-            await orderApi.placeOrder(cartId);
-          });
-
-          break;
+      // Payment Services credit card
+      if (code === PaymentMethodCode.CREDIT_CARD) {
+        if (!creditCardFormRef.current) {
+          console.error('Credit card form not rendered.');
+          return;
         }
-
-        default: {
-          // Place order
-          await orderApi.placeOrder(cartId);
+        if (!creditCardFormRef.current.validate()) {
+          // Credit card form invalid; abort order placement
+          return;
         }
+        // Submit Payment Services credit card form
+        await creditCardFormRef.current.submit();
       }
-
-      // // Payment Services credit card
-      // if (code === PaymentMethodCode.CREDIT_CARD) {
-      //   if (!creditCardFormRef.current) {
-      //     console.error('Credit card form not rendered.');
-      //     return;
-      //   }
-      //   if (!creditCardFormRef.current.validate()) {
-      //     // Credit card form invalid; abort order placement
-      //     return;
-      //   }
-      //   // Submit Payment Services credit card form
-      //   await creditCardFormRef.current.submit();
-      // }
       // Place order
-      // await orderApi.placeOrder(cartId);
+      await orderApi.placeOrder(cartId);
     } catch (error) {
       console.error(error);
       throw error;
@@ -236,7 +206,7 @@ let braintreeInstance;
   };
 
   // First, render the place order component
-  const placeOrder = await renderPlaceOrder($placeOrder, { handleValidation, handlePlaceOrder });
+  const placeOrder = await renderPlaceOrder($placeOrder, { handleValidation, updateHandlePlaceOrder });
 
   // Render the remaining containers
   const [
