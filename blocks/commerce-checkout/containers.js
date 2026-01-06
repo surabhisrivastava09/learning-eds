@@ -614,9 +614,9 @@ export const renderPlaceOrder = async (container, options = {}) => renderContain
   async () => CheckoutProvider.render(PlaceOrder, {
     handleValidation: options.handleValidation,
     handlePlaceOrder: async ({ cartId, code }) => {
+        console.log(code,'-----paymentmethodcode-----');
         await displayOverlaySpinner();
-        try {
-            console.log(code,'-----paymentmethodcode-----');
+        try {  
           switch (code) {
             case 'braintree': {
               braintreeInstance.requestPaymentMethod(async (err, payload) => {
