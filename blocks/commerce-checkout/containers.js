@@ -151,7 +151,7 @@ export const CONTAINERS = Object.freeze({
  * (e.g., { setProps: (props) => {...}, remove: () => {...} })
  */
 const registry = new Map();
-// let braintreeInstance;
+ let braintreeInstance;
 /**
  * Checks if a container with the given ID has been rendered.
  * This is used to prevent multiple instances of the same container from being rendered.
