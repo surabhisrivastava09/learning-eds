@@ -433,7 +433,6 @@ export const renderPaymentMethods = async (container, creditCardFormRef) => rend
                 if (err) {
                   console.error(err);
                 }
-
                 braintreeInstance = dropinInstance;
               });
 
@@ -614,7 +613,44 @@ export const renderPlaceOrder = async (container, options = {}) => renderContain
   CONTAINERS.PLACE_ORDER_BUTTON,
   async () => CheckoutProvider.render(PlaceOrder, {
     handleValidation: options.handleValidation,
-    handlePlaceOrder: options.handlePlaceOrder,
+    handlePlaceOrder: async ({ cartId, code }) => {
+        await displayOverlaySpinner();
+        try {
+            console.log(code,'-----paymentmethodcode-----');
+          switch (code) {
+            case 'braintree': {
+              braintreeInstance.requestPaymentMethod(async (err, payload) => {
+                if (err) {
+                  removeOverlaySpinner();
+                  console.error(err);
+                  return;
+                }
+
+                await checkoutApi.setPaymentMethod({
+                  code: 'braintree',
+                  braintree: {
+                    is_active_payment_token_enabler: false,
+                    payment_method_nonce: payload.nonce,
+                  },
+                });
+                await orderApi.placeOrder(cartId);
+              });
+
+              break;
+            }
+
+            default: {
+              // Place order
+              await orderApi.placeOrder(cartId);
+            }
+          }
+        } catch (error) {
+          console.error(error);
+          throw error;
+        } finally {
+          await removeOverlaySpinner();
+        }
+      },
   })(container),
 );
 
