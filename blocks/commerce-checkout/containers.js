@@ -1069,46 +1069,46 @@ export const renderOrderConfirmationFooterButton = async (container) => renderCo
 
 
 
-export const updateHandlePlaceOrder = async (container) => renderContainer(
-  CONTAINERS.PLACE_ORDER_BUTTON,
-  async () => CheckoutProvider.render(PlaceOrder, {
-      handlePlaceOrder: async ({ cartId, code }) => {
-        await displayOverlaySpinner();
-        try {
-            console.log(code,'-----paymentmethodcode-----');
-          switch (code) {
-            case 'braintree': {
-              braintreeInstance.requestPaymentMethod(async (err, payload) => {
-                if (err) {
-                  removeOverlaySpinner();
-                  console.error(err);
-                  return;
-                }
+// export const updateHandlePlaceOrder = async (container) => renderContainer(
+//   CONTAINERS.PLACE_ORDER_BUTTON,
+//   async () => CheckoutProvider.render(PlaceOrder, {
+//       handlePlaceOrder: async ({ cartId, code }) => {
+//         await displayOverlaySpinner();
+//         try {
+//             console.log(code,'-----paymentmethodcode-----');
+//           switch (code) {
+//             case 'braintree': {
+//               braintreeInstance.requestPaymentMethod(async (err, payload) => {
+//                 if (err) {
+//                   removeOverlaySpinner();
+//                   console.error(err);
+//                   return;
+//                 }
 
-                await checkoutApi.setPaymentMethod({
-                  code: 'braintree',
-                  braintree: {
-                    is_active_payment_token_enabler: false,
-                    payment_method_nonce: payload.nonce,
-                  },
-                });
-                await orderApi.placeOrder(cartId);
-              });
+//                 await checkoutApi.setPaymentMethod({
+//                   code: 'braintree',
+//                   braintree: {
+//                     is_active_payment_token_enabler: false,
+//                     payment_method_nonce: payload.nonce,
+//                   },
+//                 });
+//                 await orderApi.placeOrder(cartId);
+//               });
 
-              break;
-            }
+//               break;
+//             }
 
-            default: {
-              // Place order
-              await orderApi.placeOrder(cartId);
-            }
-          }
-        } catch (error) {
-          console.error(error);
-          throw error;
-        } finally {
-          await removeOverlaySpinner();
-        }
-      }
-    })(container),
-);
+//             default: {
+//               // Place order
+//               await orderApi.placeOrder(cartId);
+//             }
+//           }
+//         } catch (error) {
+//           console.error(error);
+//           throw error;
+//         } finally {
+//           await removeOverlaySpinner();
+//         }
+//       }
+//     })(container),
+// );

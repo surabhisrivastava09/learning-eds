@@ -71,7 +71,7 @@ import {
   renderShippingStatus,
   renderTermsAndConditions,
   unmountEmptyCart,
-  updateHandlePlaceOrder
+ // updateHandlePlaceOrder
 } from './containers.js';
 
 // Constants
@@ -182,6 +182,7 @@ export default async function decorate(block) {
   const handlePlaceOrder = async ({ cartId, code }) => {
     await displayOverlaySpinner(loaderRef, $loader);
     try {
+      console.log(code,'----handlePlaceOrder----');
       // Payment Services credit card
       if (code === PaymentMethodCode.CREDIT_CARD) {
         if (!creditCardFormRef.current) {
@@ -253,7 +254,7 @@ export default async function decorate(block) {
 
     renderGiftOptions($giftOptions),   
     
-    updateHandlePlaceOrder(placeOrder),
+   // updateHandlePlaceOrder(placeOrder),
 
       ]);
 
