@@ -9,9 +9,9 @@
           "Store": "b2b_us"
         },
         "cs": {
-          "Magento-Store-Code": "b2b_store",
-          "Magento-Store-View-Code": "b2b_us",
-          "Magento-Website-Code": "b2b_website",
+          "Magento-Store-Code": "US",
+          "Magento-Store-View-Code": "en_us",
+          "Magento-Website-Code": "usa",
           "x-api-key": "236cdf35cc6849c182856986ab403085",
           "Magento-Environment-Id": "456d1e25-5454-49e8-88b0-6c771fb48650"
         }
@@ -20,20 +20,20 @@
         "base-currency-code": "USD",
         "environment": "Testing",
         "environment-id": "456d1e25-5454-49e8-88b0-6c771fb48650",
-        "store-code": "b2b_store",
-        "store-id": 22,
-        "store-name": "B2B Website Store",
+        "store-code": "US",
+        "store-id": 29,
+        "store-name": "US Website Store",
         "store-url": "https://integration-5ojmyuq-5spgfttbivghc.us-a1.magentosite.cloud",
-        "store-view-code": "b2b_us",
-        "store-view-id": 24,
-        "store-view-name": "B2B Store View",
-        "website-code": "b2b_website",
-        "website-id": 23,
-        "website-name": "B2B Website"
+        "store-view-code": "en_us",
+        "store-view-id": 31,
+        "store-view-name": "US Store View",
+        "website-code": "usa",
+        "website-id": 30,
+        "website-name": "US Website"
       },
       "plugins": {
         "picker": {
-           "rootCategory": "30"
+           "rootCategory": "3"
          }
       }
     }
